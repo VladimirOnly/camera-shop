@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Obchod s kamerami</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; padding: 0; }
+    .container { width: 90%; max-width: 1200px; margin: auto; }
+    header { background: #222; color: white; padding: 20px 0; text-align: center; }
+    .products { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; padding: 20px; }
+    .product { border: 1px solid #ddd; padding: 15px; text-align: center; }
+    .product img { width: 100%; height: auto; }
+    footer { text-align: center; padding: 20px; background: #222; color: white; }
+  </style>
+</head>
+<body>
+<header>
+  <h1>Obchod s kamerami</h1>
+  <p>Profesionální montáž a instalace kamerových systémů</p>
+</header>
+<div class="container">
+  <section class="products" id="product-list">
+    <!-- Товары будут загружаться сюда -->
+  </section>
+</div>
+<footer>
+  <p>Kontakt: info@moje-kamery.cz | Tel: +420 123 456 789</p>
+</footer>
+<script>
+  const sheetUrl = 'https://docs.google.com/spreadsheets/d/1Y423RJnyWCGu2UFceA5TWej1FufDx8lA/gviz/tq?tqx=out:json';
+
+  async function loadProducts() {
+    const response = await fetch(sheetUrl);
+    const text = await response.text();
+    const json = JSON.parse(text.substr(47).slice(0, -2));
+    const rows = json.table.rows;
+
+    let productsHtml = '';
+    rows.forEach(row => {
+      const [name, description, price, image] = row.c.map(cell => cell?.v || '');
+      productsHtml += `
+                    <div class="product">
+                        <img src="${image}" alt="${name}">
+                        <h2>${name}</h2>
+                        <p>${description}</p>
+                        <p><strong>Cena: ${price} Kč</strong></p>
+                        <button>Kontaktovat</button>
+                    </div>
+                `;
+    });
+    document.getElementById('product-list').innerHTML = productsHtml;
+  }
+
+  loadProducts();
+</script>
+</body>
+</html>
+
+git remote add origin https://github.com/VladimirOnly/camera-shop.git
+git branch -M main
+git push -u origin main
+
+git config --global user.name "VladimirOnly"
+git config --global user.email "plokhotnuik@gmail.com"
