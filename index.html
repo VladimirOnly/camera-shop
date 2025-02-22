@@ -5,19 +5,32 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Obchod s kamerami</title>
   <style>
-    body { font-family: Arial, sans-serif; margin: 0; padding: 0; }
+    body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #f4f4f4; }
     .container { width: 90%; max-width: 1200px; margin: auto; }
-    header { background: #222; color: white; padding: 20px 0; text-align: center; }
+    header { background: #222; color: white; padding: 40px 20px; text-align: center; }
+    .header-content { max-width: 800px; margin: auto; }
+    .header-content h1 { font-size: 32px; margin-bottom: 10px; }
+    .header-content p { font-size: 18px; line-height: 1.6; }
+    .highlight { color: #6d796d; font-weight: bold; }
     .products { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; padding: 20px; }
-    .product { border: 1px solid #ddd; padding: 15px; text-align: center; }
-    .product img { width: 100%; height: auto; }
+    .product { border: 1px solid #ddd; padding: 15px; text-align: center; background: white; border-radius: 5px; }
+    .product img { width: 100%; height: auto; border-radius: 5px; }
     footer { text-align: center; padding: 20px; background: #222; color: white; }
   </style>
 </head>
 <body>
 <header>
-  <h1>Obchod s kamerami</h1>
-  <p>Profesionální montáž a instalace kamerových systémů</p>
+  <div class="header-content">
+    <h1>Profesionální instalace kamerových systémů</h1>
+    <p>Bezpečnost pro váš <span class="highlight">domov</span> i <span class="highlight">firmu</span></p>
+    <p>Chcete mít přehled o tom, co se děje kolem vašeho domu, bytu nebo firmy? Nabízíme profesionální montáž a konfiguraci kamerových systémů na míru vašim potřebám.</p>
+    <ul>
+      <li>✅ Kamerové systémy pro domácnosti i firmy</li>
+      <li>✅ Montáž, nastavení a servis</li>
+      <li>✅ Moderní technologie pro maximální bezpečnost</li>
+      <li>✅ Vzdálený přístup k záznamům odkudkoliv</li>
+    </ul>
+  </div>
 </header>
 <div class="container">
   <section class="products" id="product-list">
@@ -56,10 +69,3 @@
 </script>
 </body>
 </html>
-
-git remote add origin https://github.com/VladimirOnly/camera-shop.git
-git branch -M main
-git push -u origin main
-
-git config --global user.name "VladimirOnly"
-git config --global user.email "plokhotnuik@gmail.com"
