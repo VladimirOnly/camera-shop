@@ -10,7 +10,7 @@ document.getElementById("contactForm").addEventListener("submit", async function
     const responseMessage = document.getElementById("formResponse");
 
     try {
-        const response = await fetch("/api/send", { // Замените на нужный API URL
+        const response = await fetch("/api/send", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(formData)
@@ -29,11 +29,3 @@ document.getElementById("contactForm").addEventListener("submit", async function
         responseMessage.style.color = "red";
     }
 });
-
-
-// // Форма обратной связи
-// $("#contactForm").submit(function(event){
-//     event.preventDefault();
-//     alert("Děkujeme! Vaše zpráva byla odeslána.");
-// });
-
