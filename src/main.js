@@ -29,3 +29,11 @@ document.getElementById("contactForm").addEventListener("submit", async function
         responseMessage.style.color = "red";
     }
 });
+
+
+// // Форма обратной связи
+// $("#contactForm").submit(function(event){
+//     event.preventDefault();
+//     alert("Děkujeme! Vaše zpráva byla odeslána.");
+// });
+
