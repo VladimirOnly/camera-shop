@@ -4,7 +4,7 @@ header { background: #222; color: white; padding: 40px 20px; text-align: center;
 .header-content { max-width: 800px; margin: auto; }
 .header-content h1 { font-size: 32px; margin-bottom: 10px; }
 .header-content p { font-size: 18px; line-height: 1.6; }
-.highlight { color: #425a42; font-weight: bold; }
+.highlight { color: #77a877; font-weight: bold; }
 .products { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; padding: 20px; }
 .product { border: 1px solid #ddd; padding: 15px; text-align: center; background: white; border-radius: 5px; }
 .product img { width: 100%; height: auto; border-radius: 5px; }
