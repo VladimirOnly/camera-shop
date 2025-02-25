@@ -1,5 +1,10 @@
-import App from "./App.js";
-import $ from "jquery";
+import React from "react";
+import ReactDOM from "react-dom";
+import App from "./App";
+
+ReactDOM.render(<App />, document.getElementById("root"));
+
+
 
 document.getElementById("contactForm").addEventListener("submit", async function(event) {
     event.preventDefault();
