@@ -30,6 +30,3 @@ footer { text-align: center; padding: 20px; background: #222; color: white; }
     cursor: pointer;
 }
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
