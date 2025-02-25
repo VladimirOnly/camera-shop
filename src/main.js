@@ -1,3 +1,6 @@
+import App from "./App.js";
+import $ from "jquery";
+
 document.getElementById("contactForm").addEventListener("submit", async function(event) {
     event.preventDefault();
 

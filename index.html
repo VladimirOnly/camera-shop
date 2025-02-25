@@ -10,7 +10,9 @@
   <link rel="stylesheet" href="./src/style.css">
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="./src/main.js"></script>
-  <script src="src/App.js"></script>
+  <link rel="stylesheet" href="/dist/assets/style.css">
+
+
 </head>
 
 <body>
@@ -62,7 +64,7 @@
 
     let productsHtml = '';
     rows.forEach(row => {
-      const [name, description, price, image] = row.c.map(cell => cell?.v || '');
+      const [name, description, price, image] = row.c.map(cell => (cell ? cell.v : ''));
       productsHtml += `
                     <div class="product">
                         <img src="${image}" alt="${name}">
@@ -78,6 +80,7 @@
 
   loadProducts();
 </script>
+<script src="src/App.js"></script>
 </body>
 </html>
 
