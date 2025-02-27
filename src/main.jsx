@@ -86,7 +86,7 @@ document.getElementById('contactForm').addEventListener('submit', async function
     event.preventDefault();
     const formData = new FormData(this);
     const data = new URLSearchParams(formData).toString();
-    const sheetSubmitUrl = 'https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec';
+    const sheetSubmitUrl = 'https://script.google.com/macros/s/1UruaN0PZBpOvwLUmJXqfC_MseBnblj26rpMIKkaM8-I/exec';
     try {
         const response = await fetch(sheetSubmitUrl, {
             method: 'POST',
