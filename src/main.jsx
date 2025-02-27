@@ -1,12 +1,13 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import App from "./App.jsx"; // <-- Проверь, что импорт идёт из .jsx
+import App from "./App.jsx";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(<App />);
 
-
-
+// ================================
+// Функция загрузки товаров из Google Sheets
+// ================================
 const sheetUrl = 'https://docs.google.com/spreadsheets/d/1Y423RJnyWCGu2UFceA5TWej1FufDx8lA/gviz/tq?tqx=out:json';
 
 async function loadProducts() {
@@ -15,21 +16,24 @@ async function loadProducts() {
     const json = JSON.parse(text.substr(47).slice(0, -2));
     const rows = json.table.rows;
     let productsHtml = '';
+
     rows.forEach(row => {
         const [name, description, price, image] = row.c.map(cell => cell ? cell.v : '');
         productsHtml += `
-      <div class="product">
-        <img src="${image}" alt="${name}">
-        <h2>${name}</h2>
-        <p class="short-desc">${description.substring(0, 100)}...</p>
-        <p class="full-desc" style="display:none;">${description}</p>
-        <button class="toggle-desc">Rozbalit</button>
-        <p><strong>Cena: ${price} Kč</strong></p>
-        <button class="contact-btn">Kontaktovat</button>
-      </div>
-    `;
+            <div class="product">
+                <img src="${image}" alt="${name}">
+                <h2>${name}</h2>
+                <p class="short-desc">${description.substring(0, 100)}...</p>
+                <p class="full-desc" style="display:none;">${description}</p>
+                <button class="toggle-desc">Rozbalit</button>
+                <p><strong>Cena: ${price} Kč</strong></p>
+                <button class="contact-btn">Kontaktovat</button>
+            </div>
+        `;
     });
+
     document.getElementById('product-list').innerHTML = productsHtml;
+
     document.querySelectorAll('.toggle-desc').forEach(button => {
         button.addEventListener('click', function () {
             const parent = this.parentElement;
@@ -48,23 +52,31 @@ async function loadProducts() {
     });
 }
 
-loadProducts();
+document.addEventListener("DOMContentLoaded", () => {
+    loadProducts();
 
-document.getElementById('contactForm').addEventListener('submit', async function(event) {
-    event.preventDefault();
-    const formData = new FormData(this);
-    const data = new URLSearchParams(formData).toString();
-    const sheetSubmitUrl = 'https://script.google.com/macros/s/1UruaN0PZBpOvwLUmJXqfC_MseBnblj26rpMIKkaM8-I/exec';
-    try {
-        const response = await fetch(sheetSubmitUrl, {
-            method: 'POST',
-            body: data,
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+    // ================================
+    // Обработчик формы контактов (Google Apps Script)
+    // ================================
+    const form = document.getElementById('contactForm');
+    if (form) {
+        form.addEventListener('submit', async function(event) {
+            event.preventDefault();
+            const formData = new FormData(this);
+            const data = new URLSearchParams(formData).toString();
+            const sheetSubmitUrl = 'https://script.google.com/macros/s/1UruaN0PZBpOvwLUmJXqfC_MseBnblj26rpMIKkaM8-I/exec';
+
+            try {
+                const response = await fetch(sheetSubmitUrl, {
+                    method: 'POST',
+                    body: data,
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+                });
+                await response.text();
+                document.getElementById('formResponse').innerText = 'Zpráva úspěšně odeslána!';
+            } catch (error) {
+                document.getElementById('formResponse').innerText = 'Chyba při odesílání zprávy!';
+            }
         });
-        const result = await response.text();
-        document.getElementById('formResponse').innerText = 'Zpráva úspěšně odeslána!';
-    } catch (error) {
-        document.getElementById('formResponse').innerText = 'Chyba při odesílání zprávy!';
     }
 });
-
