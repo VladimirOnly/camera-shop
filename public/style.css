@@ -147,9 +147,64 @@ button:hover {
     max-width: fit-content;
 }
 
+/* Стили для хедера */
+header {
+    /*background: #222;*/
+    color: white;
+    padding: 40px 20px;
+    text-align: center;
+}
+
+.header-content {
+    max-width: 800px;
+    margin: auto;
+}
+
+.header-content h1 {
+    font-size: 32px;
+    margin-bottom: 10px;
+}
+
+.header-content p {
+    font-size: 18px;
+    line-height: 1.6;
+}
+
+.highlight {
+    color: #77a877;
+    font-weight: bold;
+}
+
+/* Стили для футера */
+footer {
+    text-align: center;
+    padding: 20px;
+    background: #222;
+    color: white;
+}
+
+/* Стили для формы */
+#contactForm {
+    max-width: 400px;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+#contactForm input, #contactForm textarea {
+    margin: 10px 0;
+    padding: 10px;
+}
+
+#contactForm button {
+    background: #333;
+    color: white;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+}
 
 @media (max-width: 875px) {
-
     .logo {
         margin-top: 10px;
     }

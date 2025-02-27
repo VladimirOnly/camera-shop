@@ -1,82 +1,114 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App.jsx";
 
-const root = ReactDOM.createRoot(document.getElementById("root"));
-root.render(<App />);
+function ProductList() {
+    const [products, setProducts] = useState([]);
 
-// ================================
-// Функция загрузки товаров из Google Sheets
-// ================================
-const sheetUrl = 'https://docs.google.com/spreadsheets/d/1Y423RJnyWCGu2UFceA5TWej1FufDx8lA/gviz/tq?tqx=out:json';
+    useEffect(() => {
+        async function loadProducts() {
+            const sheetUrl =
+              "https://docs.google.com/spreadsheets/d/1Y423RJnyWCGu2UFceA5TWej1FufDx8lA/gviz/tq?tqx=out:json";
+            try {
+                const response = await fetch(sheetUrl);
+                const text = await response.text();
+                const json = JSON.parse(text.substr(47).slice(0, -2));
+                const rows = json.table.rows;
 
-async function loadProducts() {
-    const response = await fetch(sheetUrl);
-    const text = await response.text();
-    const json = JSON.parse(text.substr(47).slice(0, -2));
-    const rows = json.table.rows;
-    let productsHtml = '';
-
-    rows.forEach(row => {
-        const [name, description, price, image] = row.c.map(cell => cell ? cell.v : '');
-        productsHtml += `
-            <div class="product">
-                <img src="${image}" alt="${name}">
-                <h2>${name}</h2>
-                <p class="short-desc">${description.substring(0, 100)}...</p>
-                <p class="full-desc" style="display:none;">${description}</p>
-                <button class="toggle-desc">Rozbalit</button>
-                <p><strong>Cena: ${price} Kč</strong></p>
-                <button class="contact-btn">Kontaktovat</button>
-            </div>
-        `;
-    });
-
-    document.getElementById('product-list').innerHTML = productsHtml;
-
-    document.querySelectorAll('.toggle-desc').forEach(button => {
-        button.addEventListener('click', function () {
-            const parent = this.parentElement;
-            const fullDesc = parent.querySelector('.full-desc');
-            const shortDesc = parent.querySelector('.short-desc');
-            if (fullDesc.style.display === 'none') {
-                fullDesc.style.display = 'block';
-                shortDesc.style.display = 'none';
-                this.textContent = 'Skrýt';
-            } else {
-                fullDesc.style.display = 'none';
-                shortDesc.style.display = 'block';
-                this.textContent = 'Rozbalit';
+                const parsedProducts = rows.map((row) => ({
+                    name: row.c[0]?.v || "",
+                    description: row.c[1]?.v || "",
+                    price: row.c[2]?.v || "",
+                    image: row.c[3]?.v || "",
+                    expanded: false,
+                }));
+                setProducts(parsedProducts);
+            } catch (error) {
+                console.error("Ошибка загрузки товаров:", error);
             }
-        });
-    });
+        }
+
+        loadProducts();
+    }, []);
+
+    function toggleDescription(index) {
+        setProducts(
+          products.map((product, i) =>
+            i === index ? { ...product, expanded: !product.expanded } : product
+          )
+        );
+    }
+
+    return (
+      <div id="product-list">
+          {products.map((product, index) => (
+            <div className="product" key={index}>
+                <img src={product.image} alt={product.name} />
+                <h2>{product.name}</h2>
+                <p className="short-desc">
+                    {product.expanded ? "" : product.description.substring(0, 100) + "..."}
+                </p>
+                <p
+                  className="full-desc"
+                  style={{ display: product.expanded ? "block" : "none" }}
+                >
+                    {product.description}
+                </p>
+                <button className="toggle-desc" onClick={() => toggleDescription(index)}>
+                    {product.expanded ? "Skrýt" : "Rozbalit"}
+                </button>
+                <p>
+                    <strong>Cena: {product.price} Kč</strong>
+                </p>
+                <button className="contact-btn">Kontaktovat</button>
+            </div>
+          ))}
+      </div>
+    );
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-    loadProducts();
+function ContactForm() {
+    const [message, setMessage] = useState("");
 
-    // ================================
-    // Обработчик формы контактов (Google Apps Script)
-    // ================================
-    const form = document.getElementById('contactForm');
-    if (form) {
-        form.addEventListener('submit', async function(event) {
-            event.preventDefault();
-            const formData = new FormData(this);
-            const data = new URLSearchParams(formData).toString();
-            const sheetSubmitUrl = 'https://script.google.com/macros/s/1UruaN0PZBpOvwLUmJXqfC_MseBnblj26rpMIKkaM8-I/exec';
+    async function handleSubmit(event) {
+        event.preventDefault();
+        const formData = new FormData(event.target);
+        const data = new URLSearchParams(formData).toString();
+        const sheetSubmitUrl =
+          "https://script.google.com/macros/s/1UruaN0PZBpOvwLUmJXqfC_MseBnblj26rpMIKkaM8-I/exec";
 
-            try {
-                const response = await fetch(sheetSubmitUrl, {
-                    method: 'POST',
-                    body: data,
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-                });
-                await response.text();
-                document.getElementById('formResponse').innerText = 'Zpráva úspěšně odeslána!';
-            } catch (error) {
-                document.getElementById('formResponse').innerText = 'Chyba při odesílání zprávy!';
-            }
-        });
+        try {
+            const response = await fetch(sheetSubmitUrl, {
+                method: "POST",
+                body: data,
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            });
+            await response.text();
+            setMessage("Zpráva úspěšně odeslána!");
+        } catch (error) {
+            setMessage("Chyba při odesílání zprávy!");
+        }
     }
-});
+
+    return (
+      <section id="contact">
+          <h2>Kontaktujte nás</h2>
+          <form id="contactForm" onSubmit={handleSubmit}>
+              <input type="text" id="name" name="name" placeholder="Jméno" required />
+              <input type="email" id="email" name="email" placeholder="E-mail" required />
+              <textarea id="message" name="message" placeholder="Zpráva" required></textarea>
+              <button type="submit">Odeslat</button>
+              <p id="formResponse">{message}</p>
+          </form>
+      </section>
+    );
+}
+
+const root = ReactDOM.createRoot(document.getElementById("root"));
+root.render(
+  <React.StrictMode>
+      <App />
+      <ProductList />
+      <ContactForm />
+  </React.StrictMode>
+);
