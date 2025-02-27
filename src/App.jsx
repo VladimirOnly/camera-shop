@@ -1,8 +1,9 @@
 import React from "react";
+import ProductList from "./ProductList"; // Импортируем компонент ProductList
 
 export default function App() {
   return (
-    <div>
+    <div className="app-container">
       {/* Хедер */}
       <header>
         <div className="header-content">
@@ -24,11 +25,14 @@ export default function App() {
         </div>
       </header>
 
-      {/* Основной контент */}
-      <h1>Profesionální instalace kamerových systémů</h1>
-      <p>Bezpečnost pro váš domov i firmu</p>
-
-
+      {/* Основной контент (карточки товаров) */}
+      <main className="main-content">
+        <div className="container">
+          <section className="products" id="product-list">
+            <ProductList /> {/* Рендерим компонент ProductList */}
+          </section>
+        </div>
+      </main>
 
       {/* Футер */}
       <footer>

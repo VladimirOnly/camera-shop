@@ -1,155 +1,30 @@
-@font-face {
-    font-family: "JetBrains Sans";
-    src: url("fonts/JetBrainsSans-Regular.woff2");
-}
-
-@font-face {
-    font-family: "JetBrains Mono";
-    src: url("fonts/JetBrainsMono-Regular.woff2");
-}
-
-:root {
-    font-family: "JetBrains Sans", Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-    font-weight: 300;
-    color: rgba(255, 255, 255, 0.87);
-    background-color: #000000;
-    text-align: center;
-}
-
+/* Общие стили */
 body {
     margin: 0;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    min-width: 320px;
     min-height: 100vh;
-    align-items: center;
-
-    background-image: url("background.svg");
-    background-repeat: no-repeat;
-    background-size: contain;
+    background-color: #000000;
+    color: rgba(255, 255, 255, 0.87);
+    font-family: "JetBrains Sans", Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
 }
 
-h1 {
-    font-size: 29px;
-    line-height: 39px;
-    font-weight: 300;
-}
-
-.title {
-    margin-bottom: 40px;
-}
-
-#app {
-    max-width: 1280px;
-}
-
-.logo {
-    margin-top: 45px;
-    margin-left: 20%;
-    align-self: flex-start;
-}
-
-img {
-    max-width: 100%;
-    height: auto;
-}
-
-.counter {
-    font-family: "JetBrains Mono", Inter, system-ui, sans-serif;
-    font-weight: 400;
+/* Контейнер приложения */
+.app-container {
     display: flex;
-    flex-direction: row;
-    justify-content: center;
-    padding: 60px;
-    color: rgba(255, 255, 255, 1);
+    flex-direction: column;
+    min-height: 100vh;
 }
 
-.counter-interaction {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    gap: 20px 0;
-    width: 470px;
-    justify-content: space-between;
-}
-
-.counter-interaction button {
-    width: 48%;
-    height: 47%;
-    align-content: space-between;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    border-radius: 120px;
-    font-size: 68px;
-    text-align: center;
-}
-
-.counter-interaction button:nth-child(2n+1) {
-    margin-right: 14px;
-}
-
-.counter-interaction button:disabled {
-    color: rgba(255, 255, 255, 0.5);
-    background-image: none;
-    border-color: inherit;
-}
-
-.counter-info {
-    width: 360px;
-    height: 345px;
-    margin-right: 27px;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    background-color: rgba(25, 25, 28, 0.5);
-    border-radius: 29px;
-}
-
-.counter-text {
-    text-transform: uppercase;
-    font-weight: 500;
-    font-size: 24px;
-    margin-top: 60px;
-    margin-bottom: 28px;
-
-}
-
-.counter-value {
-    font-weight: 200;
-    font-size: 170px;
-    margin: 0;
-    padding: 0;
-    line-height: 1;
-}
-
-button {
-    font-family: "JetBrains Mono", Inter, system-ui, sans-serif;
-    background-color: rgba(25, 25, 28, 0.5);
-    cursor: pointer;
-    color: rgba(255, 255, 255, 1);
-}
-
-button:hover {
-    background-image: radial-gradient(
-            farthest-corner at 77% 83%,
-            rgba(1, 197, 245, 0.5) 2%,
-            rgba(1, 126, 254, 0.5) 28%,
-            rgba(25, 25, 28, 0) 70%
-    );
-    border: 1px solid rgba(76, 166, 255, 0.2);
-    background-clip: padding-box;
-}
-
-.technologies {
-    margin-bottom: 36px;
-    align-self: center;
-}
-
-.technologies img {
-    max-width: fit-content;
+/* Основной контент */
+.main-content {
+    flex: 1;
+    padding: 20px 0;
 }
 
 /* Стили для хедера */
 header {
-    /*background: #222;*/
+    background: #222;
     color: white;
     padding: 40px 20px;
     text-align: center;
@@ -181,62 +56,166 @@ footer {
     padding: 20px;
     background: #222;
     color: white;
+    margin-top: auto;
 }
 
-/* Стили для формы */
-#contactForm {
-    max-width: 400px;
+/* ================================ */
+/* ✅ Карточки товаров в 4 ряда */
+/* ================================ */
+/* ================================ */
+/* ✅ Карточки товаров на всю ширину */
+/* ================================ */
+.container {
+    width: 100%;
+    max-width: 1400px;
     margin: auto;
+    padding: 20px;
+}
+
+.products {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Автоширина */
+    gap: 20px;
+    justify-items: center; /* Центрируем товары */
+    width: 100%;
+}
+
+.product {
+    width: 100%;
+    max-width: 350px; /* Увеличил размер карточек */
+    border: 1px solid #444;
+    padding: 15px;
+    text-align: center;
+    background: #333;
+    border-radius: 8px;
+    color: white;
+    transition: transform 0.2s ease-in-out;
+}
+
+.product:hover {
+    transform: scale(1.05);
+}
+
+.product img {
+    width: 100%;
+    height: auto;
+    max-height: 200px; /* Увеличил высоту изображений */
+    border-radius: 5px;
+    cursor: pointer;
+    object-fit: cover;
+}
+
+/* ================================ */
+/* ✅ Адаптивность для мобильных */
+/* ================================ */
+@media (max-width: 1024px) {
+    .products {
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    }
+}
+
+@media (max-width: 768px) {
+    .products {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    }
+}
+
+@media (max-width: 480px) {
+    .products {
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    }
+}
+
+/* ================================ */
+/* ✅ Стили для формы контактов */
+/* ================================ */
+#contact {
+    max-width: 600px;
+    margin: 40px auto;
+    padding: 20px;
+    background: #222;
+    border-radius: 10px;
+}
+
+#contact h2 {
+    text-align: center;
+}
+
+#contactForm {
     display: flex;
     flex-direction: column;
+    gap: 15px;
 }
 
-#contactForm input, #contactForm textarea {
-    margin: 10px 0;
+#contactForm label {
+    font-weight: bold;
+}
+
+#contactForm input,
+#contactForm textarea {
+    width: 100%;
     padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #555;
+    background: #333;
+    color: white;
 }
 
 #contactForm button {
-    background: #333;
+    background: #77a877;
     color: white;
-    padding: 10px;
     border: none;
+    padding: 10px;
     cursor: pointer;
+    border-radius: 5px;
 }
 
-@media (max-width: 875px) {
-    .logo {
-        margin-top: 10px;
-    }
+#contactForm button:hover {
+    background: #559955;
+}
 
-    .title {
-        margin-bottom: 30px;
-    }
+#formResponse {
+    text-align: center;
+    font-weight: bold;
+    margin-top: 10px;
+}
 
-    .counter {
-        flex-direction: column;
-        padding: 0;
-        margin-bottom: 0;
-    }
+/* ================================ */
+/* ✅ Кнопки и текст */
+/* ================================ */
+.toggle-desc, .contact-btn {
+    background: #555;
+    color: white;
+    border: none;
+    padding: 10px;
+    margin: 5px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background 0.3s;
+}
 
-    .counter-info {
-        width: 100%;
-        height: 300px;
-        margin-right: 0;
-        margin-bottom: 15px;
-    }
+.toggle-desc:hover, .contact-btn:hover {
+    background: #777;
+}
 
-    .counter-interaction {
-        display: flex;
-        flex-direction: row;
-        height: auto;
-        width: auto;
-    }
+/* ================================ */
+/* ✅ Модальное окно для изображения */
+/* ================================ */
+.image-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
 
-    .counter-interaction button {
-        width: 47%;
-        height: 100px;
-        margin-right: 0;
-        margin-bottom: 15px;
-    }
+.expanded-image {
+    max-width: 90%;
+    max-height: 90%;
+    border-radius: 10px;
 }
