@@ -1,6 +1,6 @@
 const nodemailer = require("nodemailer");
 
-export default async function handler(req, res) {
+async function handler(req, res) {
     if (req.method !== "POST") {
         return res.status(405).json({ error: "Method Not Allowed" });
     }
@@ -10,7 +10,6 @@ export default async function handler(req, res) {
         return res.status(400).json({ error: "Všechna pole jsou povinná." });
     }
 
-    // Подключение к Gmail через Nodemailer
     const transporter = nodemailer.createTransport({
         service: "gmail",
         auth: {
@@ -22,7 +21,7 @@ export default async function handler(req, res) {
     try {
         await transporter.sendMail({
             from: `"iseeyou24.cz" <${process.env.EMAIL_USER}>`,
-            to: "tvůj@email.com", // Сюда приходят заявки
+            to: "tvůj@email.com", // Укажи свой email
             subject: "Nová zpráva z webu",
             text: `Jméno: ${name}\nE-mail: ${email}\nZpráva:\n${message}`
         });
@@ -33,3 +32,5 @@ export default async function handler(req, res) {
         return res.status(500).json({ error: "Chyba při odesílání e-mailu." });
     }
 }
+
+module.exports = handler; // <-- CommonJS export
