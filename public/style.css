@@ -149,7 +149,14 @@ footer {
     .products {
         grid-template-columns: repeat(1, 1fr); /* 1 карточка в ряд на мобильных */
     }
+    @media (max-width: 768px) {
+        textarea {
+            min-height: 150px;
+            font-size: 18px;
+        }
+    }
 }
+
 
 /* ================================ */
 /* ✅ Стили для формы контактов */
@@ -182,10 +189,18 @@ footer {
     /*width: 100%;*/
     padding: 10px;
     border-radius: 5px;
-    border: 1px solid #555;
+    /*border: 1px solid #555;*/
     background: #333;
     color: white;
+
+
+    resize: none; /* Запрещаем ручное изменение размера */
+    overflow-y: hidden;
+    font-size: 16px;
+    border: 1px solid #ccc;
+
 }
+
 
 #contactForm button {
     background: #77a877;
