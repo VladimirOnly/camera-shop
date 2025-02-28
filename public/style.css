@@ -118,21 +118,21 @@ footer {
 /* ================================ */
 /* ✅ Адаптивность для мобильных */
 /* ================================ */
-@media (max-width: 1024px) {
+@media (min-width: 1024px) {
     .products {
-        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        grid-template-columns: repeat(4, 1fr); /* 4 карточки в ряд */
     }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1023px) and (min-width: 768px) {
     .products {
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        grid-template-columns: repeat(2, 1fr); /* 2 карточки в ряд на планшетах */
     }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 767px) {
     .products {
-        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        grid-template-columns: repeat(1, 1fr); /* 1 карточка в ряд на мобильных */
     }
 }
 
