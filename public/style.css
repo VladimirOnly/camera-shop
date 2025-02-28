@@ -73,15 +73,17 @@ footer {
 }
 
 .products {
-    /*display: flex;*/
-    /*grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); !* Автоширина *!*/
-    /*gap: 20px;*/
-    /*justify-items: center; !* Центрируем товары *!*/
-    /*width: 100%;*/
+
     display: flex;
     flex-wrap: wrap;
     gap: 20px;
     justify-content: space-between;
+
+    /*display: grid;*/
+    /*grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); !* Динамическое размещение *!*/
+    /*gap: 20px;*/
+    /*width: 100%;*/
+    /*justify-content: center;*/
 
 }
 

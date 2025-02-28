@@ -11,7 +11,7 @@ function ContactForm() {
         const formData = new FormData(event.target);
         const data = new URLSearchParams(formData).toString();
         const sheetSubmitUrl =
-          "https://script.google.com/macros/s/1UruaN0PZBpOvwLUmJXqfC_MseBnblj26rpMIKkaM8-I/exec";
+          "https://script.google.com/macros/s/AKfycbw2V7LyTcFIilESiHqxoGShHabT8R0mKKYfHVnbzMeFj1gk_r9vcvfob7kYV1CuDqq2/exec";
 
         try {
             const response = await fetch(sheetSubmitUrl, {
