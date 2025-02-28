@@ -1,3 +1,5 @@
+require("dotenv").config(); // <-- Подключаем .env
+
 const nodemailer = require("nodemailer");
 
 async function handler(req, res) {
@@ -13,15 +15,17 @@ async function handler(req, res) {
     const transporter = nodemailer.createTransport({
         service: "gmail",
         auth: {
-            user: process.env.EMAIL_USER, // Добавь в Vercel Environment Variables
-            pass: process.env.EMAIL_PASS  // Используй Google App Password
-        }
+            user: process.env.EMAIL_USER,
+            pass: process.env.EMAIL_PASS
+        },
+        secure: false,
+        tls: { rejectUnauthorized: false }
     });
 
     try {
         await transporter.sendMail({
             from: `"iseeyou24.cz" <${process.env.EMAIL_USER}>`,
-            to: "tvůj@email.com", // Укажи свой email
+            to: "tvůj@email.com",
             subject: "Nová zpráva z webu",
             text: `Jméno: ${name}\nE-mail: ${email}\nZpráva:\n${message}`
         });
@@ -33,4 +37,4 @@ async function handler(req, res) {
     }
 }
 
-module.exports = handler; // <-- CommonJS export
+module.exports = handler;
