@@ -91,13 +91,24 @@ export default function ProductList() {
             <p
               className="full-desc"
               style={{
-                maxHeight: product.expanded ? "500px" : "0px",
-                overflow: "hidden",
+                maxHeight: product.expanded ? "200px" : "0px",
+                overflowY: product.expanded ? "auto" : "hidden",
                 transition: "max-height 0.3s ease-in-out",
               }}
             >
               {product.description}
             </p>
+
+            {/*<p*/}
+            {/*  className="full-desc"*/}
+            {/*  style={{*/}
+            {/*    maxHeight: product.expanded ? "200px" : "0px",*/}
+            {/*    overflowY: product.expanded ? "auto" : "hidden",*/}
+            {/*    transition: "max-height 0.3s ease-in-out",*/}
+            {/*  }}*/}
+            {/*>*/}
+            {/*  {product.description}*/}
+            {/*</p>*/}
             <p>
               <strong>Cena: {product.price} Kč</strong>
             </p>

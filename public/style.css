@@ -366,3 +366,24 @@ footer {
 .remove-btn:hover {
     background: #b71c1c;
 }
+/* ✅ Описание товара (разворачиваемое) */
+/*.full-desc {*/
+/*    max-height: 0;*/
+/*    overflow-y: hidden;*/
+/*    transition: max-height 0.3s ease-in-out;*/
+/*    padding-top: 5px;*/
+/*}*/
+
+/* 🔥 Позволяем скроллить текст внутри */
+/*.product.expanded .full-desc {*/
+/*    max-height: 200px; !* Ограничиваем высоту *!*/
+/*    overflow-y: auto; !* Включаем прокрутку *!*/
+/*    padding: 10px;*/
+/*}*/
+
+/* ✅ Исправление для мобильных */
+@media (max-width: 768px) {
+    .product.expanded .full-desc {
+        max-height: 250px; /* Чуть больше высоты на телефоне */
+    }
+}
