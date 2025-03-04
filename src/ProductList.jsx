@@ -91,8 +91,8 @@ export default function ProductList() {
             <p
               className="full-desc"
               style={{
-                maxHeight: product.expanded ? "200px" : "0px",
-                overflowY: product.expanded ? "auto" : "hidden",
+                maxHeight: product.expanded ? "500px" : "0px",
+                overflow: "hidden",
                 transition: "max-height 0.3s ease-in-out",
               }}
             >
