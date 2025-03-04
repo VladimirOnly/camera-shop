@@ -4,10 +4,12 @@ export default function ProductList() {
   const [products, setProducts] = useState([]);
   const [cart, setCart] = useState([]);
   const [expandedImage, setExpandedImage] = useState(null);
+  const [notification, setNotification] = useState("");
 
   useEffect(() => {
     async function loadProducts() {
-      const sheetUrl = "https://docs.google.com/spreadsheets/d/1Y423RJnyWCGu2UFceA5TWej1FufDx8lA/gviz/tq?tqx=out:json";
+      const sheetUrl =
+        "https://docs.google.com/spreadsheets/d/1Y423RJnyWCGu2UFceA5TWej1FufDx8lA/gviz/tq?tqx=out:json";
       try {
         const response = await fetch(sheetUrl);
         const text = await response.text();
@@ -49,12 +51,25 @@ export default function ProductList() {
 
   function addToCart(product) {
     setCart([...cart, product]);
+    showNotification(`${product.name} byl přidán do košíku!`);
+  }
+
+  function removeFromCart(index) {
+    setCart(cart.filter((_, i) => i !== index));
+  }
+
+  function showNotification(message) {
+    setNotification(message);
+    setTimeout(() => setNotification(""), 2000);
   }
 
   const totalPrice = cart.reduce((sum, product) => sum + product.price, 0);
 
   return (
     <div>
+      {/* 🔥 Уведомление */}
+      {notification && <div className="notification">{notification}</div>}
+
       <h2>Produkty</h2>
       <div className="products">
         {products.map((product, index) => (
@@ -93,15 +108,23 @@ export default function ProductList() {
         ))}
       </div>
 
-      <div className="cart">
-        <h2>Košík</h2>
-        <ul>
-          {cart.map((item, index) => (
-            <li key={index}>{item.name} - {item.price} Kč</li>
-          ))}
-        </ul>
-        <p><strong>Celková cena: {totalPrice} Kč</strong></p>
-      </div>
+      {/* 🔥 Корзина */}
+      {cart.length > 0 && (
+        <div className="cart">
+          <h2>🛒 Košík</h2>
+          <ul>
+            {cart.map((item, index) => (
+              <li key={index}>
+                {item.name} - {item.price} Kč
+                <button className="remove-btn" onClick={() => removeFromCart(index)}>
+                  ❌ Odebrat
+                </button>
+              </li>
+            ))}
+          </ul>
+          <p><strong>Celková cena: {totalPrice} Kč</strong></p>
+        </div>
+      )}
 
       {expandedImage && (
         <div className="image-modal" onClick={closeExpandedImage}>
