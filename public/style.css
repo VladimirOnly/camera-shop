@@ -381,6 +381,20 @@ footer {
 /*    padding: 10px;*/
 /*}*/
 
+/* ✅ Описание товара (разворачиваемое) */
+.full-desc {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-in-out, padding 0.3s ease-in-out;
+    padding: 0;
+}
+
+/* 🔥 Когда карточка раскрыта, текст показывается полностью */
+.product.expanded .full-desc {
+    max-height: 1000px; /* Достаточно большое значение, чтобы текст влез */
+    padding: 10px;
+}
+
 /* ✅ Исправление для мобильных */
 @media (max-width: 768px) {
     .product.expanded .full-desc {
