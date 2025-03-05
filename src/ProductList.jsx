@@ -88,17 +88,19 @@ export default function ProductList() {
             <p className="short-desc">
               {product.expanded ? "" : product.description.substring(0, 100) + "..."}
             </p>
-            <p
-              className="full-desc"
-              style={{
-                maxHeight: product.expanded ? "500px" : "0px",
-                overflow: "hidden",
-                transition: "max-height 0.3s ease-in-out",
-              }}
-            >
+            {/*<p*/}
+            {/*  className="full-desc"*/}
+            {/*  style={{*/}
+            {/*    maxHeight: product.expanded ? "500px" : "0px",*/}
+            {/*    overflow: "hidden",*/}
+            {/*    transition: "max-height 0.3s ease-in-out",*/}
+            {/*  }}*/}
+            {/*>*/}
+            {/*  {product.description}*/}
+            {/*</p>*/}
+            <p className="full-desc">
               {product.description}
             </p>
-
             {/*<p*/}
             {/*  className="full-desc"*/}
             {/*  style={{*/}
