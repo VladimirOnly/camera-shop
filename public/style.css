@@ -94,6 +94,7 @@ footer {
     max-width: 1200px;
     margin: 0 auto;
 
+
     /*display: grid;*/
     /*grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); !* Динамическое размещение *!*/
     /*gap: 20px;*/
@@ -366,46 +367,5 @@ footer {
 .remove-btn:hover {
     background: #b71c1c;
 }
-/* ✅ Описание товара (разворачиваемое) */
-/*.full-desc {*/
-/*    max-height: 0;*/
-/*    overflow-y: hidden;*/
-/*    transition: max-height 0.3s ease-in-out;*/
-/*    padding-top: 5px;*/
-/*}*/
-
-/* 🔥 Позволяем скроллить текст внутри */
-/*.product.expanded .full-desc {*/
-/*    max-height: 200px; !* Ограничиваем высоту *!*/
-/*    overflow-y: auto; !* Включаем прокрутку *!*/
-/*    padding: 10px;*/
-/*}*/
-
-/* ✅ Описание товара (разворачиваемое) */
 
 
-.full-desc {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.3s ease-in-out, padding 0.3s ease-in-out;
-    padding: 0;
-}
-/* 🔥 Когда карточка раскрыта, она расширяется вместе с текстом */
-.product.expanded {
-    grid-column: span 4; /* Карточка займет всю ширину */
-    width: 100%;
-    display: block;
-}
-
-/* 🔥 Когда карточка раскрыта, текст показывается полностью */
-.product.expanded .full-desc {
-    max-height: 10000px; /* Достаточно большое значение, чтобы текст влез */
-    padding: 10px;
-}
-
-/* ✅ Исправление для мобильных */
-@media (max-width: 768px) {
-    .product.expanded .full-desc {
-        max-height: 250px; /* Чуть больше высоты на телефоне */
-    }
-}

@@ -39,6 +39,8 @@ export default function ProductList() {
         i === index ? { ...product, expanded: !product.expanded } : product
       )
     );
+    console.log("Clicked index:", index);
+    console.log("Updated products:", products);
   }
 
   function handleImageClick(imageUrl) {
