@@ -9,14 +9,15 @@ export default function App() {
         <div className="header-content">
           <h1>Profesionální instalace kamerových systémů</h1>
           <p>
-            Bezpečnost pro váš <span className="highlight">domov</span> i{" "}
+            Bezpečnost pro váš <span className="highlight">domov</span> i{' '}
             <span className="highlight">firmu</span>
           </p>
           <p>
-            Chcete mít přehled o tom, co se děje kolem vašeho domu, bytu nebo firmy? Nabízíme
-            profesionální montáž a konfiguraci kamerových systémů na míru vašim potřebám.
+            Chcete mít přehled o tom, co se děje kolem vašeho domu, bytu nebo
+            firmy? Nabízíme profesionální montáž a konfiguraci kamerových
+            systémů na míru vašim potřebám.
           </p>
-          <ul>
+          <ul className="list">
             <li>✅ Kamerové systémy pro domácnosti i firmy</li>
             <li>✅ Montáž, nastavení a servis</li>
             <li>✅ Moderní technologie pro maximální bezpečnost</li>
