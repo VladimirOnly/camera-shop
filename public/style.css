@@ -22,7 +22,7 @@ body {
     padding: 20px 0;
 }
 
-/* Стили для хедера */
+/* Хедер */
 header {
     background: #222;
     color: white;
@@ -51,7 +51,7 @@ header {
     font-weight: bold;
 }
 
-/* Стили для футера */
+/* Футер */
 footer {
     text-align: center;
     padding: 20px;
@@ -60,9 +60,9 @@ footer {
     margin-top: auto;
 }
 
-/* Контейнер товаров */
+/* Контейнер */
 .container {
-    max-width: 1200px;
+    max-width: 1400px;
     width: 100%;
     margin: 0 auto;
     padding: 0 10px;
@@ -76,12 +76,12 @@ footer {
     gap: 20px;
     justify-content: space-between;
     width: 100%;
-    max-width: 1200px;
+    max-width: 1400px;
     margin: 0 auto;
 }
 
 .product {
-    max-width: 350px;
+    max-width: 300px;
     border: 1px solid #444;
     padding: 15px;
     text-align: center;
@@ -89,7 +89,7 @@ footer {
     border-radius: 8px;
     color: white;
     transition: transform 0.2s ease-in-out;
-    width: calc(50% - 20px); /* 2 в ряд */
+    width: calc(25% - 20px); /* 4 в ряд по умолчанию */
     min-width: 200px;
     box-sizing: border-box;
     overflow: hidden;
@@ -108,44 +108,41 @@ footer {
     object-fit: cover;
 }
 
-/* ✅ Исправил отображение полного текста при раскрытии */
-.product.expanded {
-    max-height: none !important;
-    overflow: visible !important;
-}
-
-.product.expanded .full-desc {
-    max-height: none !important;
-    overflow: visible !important;
-    display: block;
-}
-
-/* ✅ Адаптивность */
-@media (min-width: 1024px) {
-    .products {
-        grid-template-columns: repeat(4, 1fr);
+/* ✅ 5 карточек в ряд для больших экранов */
+@media (min-width: 1400px) {
+    .product {
+        width: calc(20% - 20px); /* 5 карточек в ряд */
     }
 }
 
-@media (max-width: 1023px) and (min-width: 768px) {
-    .products {
-        grid-template-columns: repeat(2, 1fr);
+/* ✅ 4 карточки в ряд от 1024px до 1399px */
+@media (min-width: 1024px) and (max-width: 1399px) {
+    .product {
+        width: calc(25% - 20px); /* 4 карточки в ряд */
     }
 }
 
+/* ✅ 3 карточки в ряд для средних экранов */
+@media (min-width: 768px) and (max-width: 1023px) {
+    .product {
+        width: calc(33.33% - 20px); /* 3 карточки в ряд */
+    }
+}
+
+/* ✅ 2 карточки в ряд на мобильных */
 @media (max-width: 767px) {
-    .products {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
-        justify-content: space-between;
-    }
     .product {
         width: calc(50% - 10px); /* 2 карточки в ряд */
     }
 }
 
-/* ✅ Стили для формы контактов */
+/* ✅ Полное отображение описания при раскрытии */
+.product.expanded .full-desc {
+    max-height: none;
+    overflow: visible;
+}
+
+/* ✅ Форма контактов */
 #contact {
     max-width: 600px;
     margin: 40px auto;
@@ -162,10 +159,6 @@ footer {
     display: flex;
     flex-direction: column;
     gap: 15px;
-}
-
-#contactForm label {
-    font-weight: bold;
 }
 
 #contactForm input,
@@ -193,12 +186,6 @@ footer {
     background: #559955;
 }
 
-#formResponse {
-    text-align: center;
-    font-weight: bold;
-    margin-top: 10px;
-}
-
 /* ✅ Кнопки */
 .toggle-desc, .contact-btn {
     background: #555;
@@ -215,7 +202,7 @@ footer {
     background: #777;
 }
 
-/* ✅ Модальное окно для изображения */
+/* ✅ Модальное окно */
 .image-modal {
     position: fixed;
     top: 0;
@@ -251,7 +238,7 @@ footer {
     background: #559955;
 }
 
-/* ✅ Корзина */
+/* ✅ Стили корзины */
 .cart {
     max-width: 400px;
     margin: 20px auto;
@@ -260,43 +247,6 @@ footer {
     border-radius: 10px;
     color: white;
     text-align: center;
-}
-
-.cart ul {
-    list-style: none;
-    padding: 0;
-}
-
-.cart li {
-    padding: 5px 0;
-}
-
-/* ✅ Уведомление */
-.notification {
-    position: fixed;
-    top: 10px;
-    right: 10px;
-    background: #4caf50;
-    color: white;
-    padding: 10px 20px;
-    border-radius: 5px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    animation: fadeInOut 2s ease-in-out;
-}
-
-@keyframes fadeInOut {
-    0% { opacity: 0; }
-    10% { opacity: 1; }
-    90% { opacity: 1; }
-    100% { opacity: 0; }
-}
-
-/* ✅ Корзина */
-.cart {
-    background: #222;
-    padding: 20px;
-    border-radius: 8px;
-    margin-top: 20px;
 }
 
 .cart ul {
@@ -325,4 +275,24 @@ footer {
 
 .remove-btn:hover {
     background: #b71c1c;
+}
+
+/* 🔥 Уведомления */
+.notification {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    background: #4caf50;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    animation: fadeInOut 2s ease-in-out;
+}
+
+@keyframes fadeInOut {
+    0% { opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { opacity: 0; }
 }
