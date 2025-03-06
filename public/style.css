@@ -93,6 +93,8 @@ footer {
     min-width: 200px;
     box-sizing: border-box;
     overflow: hidden;
+    /*height: auto !important; !* Позволяет карточке расти *!*/
+    /*min-height: 100%; !* Убедимся, что она занимает всю высоту *!*/
 }
 
 .product:hover {
@@ -138,8 +140,11 @@ footer {
 
 /* ✅ Полное отображение описания при раскрытии */
 .product.expanded .full-desc {
-    max-height: none;
+    /*max-height: none;*/
     overflow: visible;
+    max-height: none !important; /* Полностью убрать ограничение */
+
+
 }
 
 /* ✅ Форма контактов */
@@ -296,3 +301,4 @@ footer {
     90% { opacity: 1; }
     100% { opacity: 0; }
 }
+
