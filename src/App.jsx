@@ -37,7 +37,7 @@ export default function App() {
     setFormStatus("Odesílání...");
     const formData = new FormData(event.target);
     const data = new URLSearchParams(formData).toString();
-    const scriptUrl = "https://script.google.com/macros/s/AKfycbw2V7LyTcFIilESiHqxoGShHabT8R0mKKYfHVnbzMeFj1gk_r9vcvfob7kYV1CuDqq2/exec";
+    const scriptUrl = "https://script.google.com/macros/s/AKfycbz5vandXsZCaSPHanD2m0Uq6kfR91IQwS0sr1z06NmaZCTglkieKg-OtvL_4NQSi7Sw_g/exec";
 
     try {
       await fetch(scriptUrl, {
