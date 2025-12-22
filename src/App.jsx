@@ -217,8 +217,8 @@ export default function App() {
           </form>
 
           <div className="flex flex-col md:flex-row justify-center items-center gap-8 mt-16 text-sm text-[#9CA3AF] uppercase tracking-widest">
-            <a href="mailto:iseeyou24.cz" className="hover:text-white transition flex items-center gap-2">
-              <span>✉</span> iseeyou24.cz
+            <a href="mailto:info@iseeyou24.cz" className="hover:text-white transition flex items-center gap-2">
+              <span>✉</span> info@iseeyou24.cz
             </a>
             <a href="tel:+420777938847" className="hover:text-white transition flex items-center gap-2">
               <span>📞</span> +420 777 938 847
