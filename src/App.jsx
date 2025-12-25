@@ -62,7 +62,7 @@ export default function App() {
 
           <div className="flex items-center gap-3 cursor-pointer h-full py-2" onClick={() => window.scrollTo(0,0)}>
             <img
-              src="/logo.png"
+              src="/images/logo.png"
               alt="I SEE YOU 24"
               className="h-full w-auto object-contain"
             />
