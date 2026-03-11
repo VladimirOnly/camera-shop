@@ -5,11 +5,9 @@ export default function App() {
   const [loading, setLoading] = useState(true);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [formStatus, setFormStatus] = useState("");
-  
-  // НОВОЕ: Состояние для кнопки копирования ссылки
   const [copySuccess, setCopySuccess] = useState(false);
 
-  // --- ЗАГРУЗКА ДАННЫХ ---
+  // --- ЗАГРУЗКА ДАННЫХ И ПРОВЕРКА ССЫЛКИ ---
   useEffect(() => {
     async function loadProducts() {
       const sheetUrl = "https://docs.google.com/spreadsheets/d/1Y423RJnyWCGu2UFceA5TWej1FufDx8lA/gviz/tq?tqx=out:json";
@@ -20,8 +18,8 @@ export default function App() {
 
         const parsedProducts = json.table.rows.map((row) => {
           const name = row.c[0]?.v || "Produkt";
-          // НОВОЕ: Генерируем уникальный ID для ссылки из названия товара
-          const id = encodeURIComponent(name.trim().toLowerCase().replace(/\s+/g, '-'));
+          // Создаем КРАСИВЫЙ ID: только буквы, цифры и тире (убираем скобки и %20)
+          const id = name.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
           
           return {
             id: id,
@@ -34,35 +32,39 @@ export default function App() {
         
         setProducts(parsedProducts);
 
-        // НОВОЕ: Проверяем, есть ли в ссылке ID товара при загрузке страницы
+        // Смотрим в ссылку только ПОСЛЕ того, как скачали все товары
         const urlParams = new URLSearchParams(window.location.search);
         const productIdFromUrl = urlParams.get("product");
         if (productIdFromUrl) {
           const foundProduct = parsedProducts.find(p => p.id === productIdFromUrl);
           if (foundProduct) {
-            setSelectedProduct(foundProduct); // Автоматически открываем модалку!
+            setSelectedProduct(foundProduct);
           }
         }
 
       } catch (error) {
         console.error("Chyba:", error);
       } finally {
-        setLoading(false);
+        setLoading(false); // Сообщаем сайту, что загрузка окончена
       }
     }
     loadProducts();
   }, []);
 
-  // НОВОЕ: Обновляем ссылку в адресной строке при открытии/закрытии модалки
+  // --- ИЗМЕНЕНИЕ ССЫЛКИ ПРИ ОТКРЫТИИ/ЗАКРЫТИИ МОДАЛКИ ---
   useEffect(() => {
+    // ВАЖНО: Ничего не делаем со ссылкой, пока сайт загружается
+    if (loading) return;
+
     const url = new URL(window.location);
     if (selectedProduct) {
       url.searchParams.set("product", selectedProduct.id);
     } else {
       url.searchParams.delete("product");
     }
-    window.history.pushState({}, '', url);
-  }, [selectedProduct]);
+    // Используем replaceState, чтобы не ломать кнопку "Назад" в браузере
+    window.history.replaceState({}, '', url);
+  }, [selectedProduct, loading]);
 
   // --- ОТПРАВКА ФОРМЫ ---
   async function handleSubmit(event) {
@@ -283,13 +285,13 @@ export default function App() {
             <div className="w-full md:w-1/2 p-10 flex flex-col">
               <h3 className="text-xl md:text-2xl font-bold mb-4 text-[#121826] uppercase leading-tight">{selectedProduct.name}</h3>
               
-              {/* НОВОЕ: Кнопка копирования ссылки */}
+              {/* Кнопка копирования ссылки */}
               <button 
                 onClick={() => {
                   const url = `${window.location.origin}${window.location.pathname}?product=${selectedProduct.id}`;
                   navigator.clipboard.writeText(url);
                   setCopySuccess(true);
-                  setTimeout(() => setCopySuccess(false), 2000); // Возвращаем текст через 2 секунды
+                  setTimeout(() => setCopySuccess(false), 2000);
                 }}
                 className="flex items-center gap-2 text-sm text-gray-500 hover:text-[#121826] mb-6 transition w-fit"
               >
