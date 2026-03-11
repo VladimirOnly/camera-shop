@@ -5,6 +5,9 @@ export default function App() {
   const [loading, setLoading] = useState(true);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [formStatus, setFormStatus] = useState("");
+  
+  // НОВОЕ: Состояние для кнопки копирования ссылки
+  const [copySuccess, setCopySuccess] = useState(false);
 
   // --- ЗАГРУЗКА ДАННЫХ ---
   useEffect(() => {
@@ -15,13 +18,32 @@ export default function App() {
         const text = await response.text();
         const json = JSON.parse(text.substr(47).slice(0, -2));
 
-        const parsedProducts = json.table.rows.map((row) => ({
-          name: row.c[0]?.v || "Produkt",
-          description: row.c[1]?.v || "",
-          price: row.c[2]?.v ? `${row.c[2].v} Kč` : "Na vyžádání", // Если цены нет - пишем "По запросу"
-          image: row.c[3]?.v || "https://via.placeholder.com/400x300?text=Foto",
-        }));
+        const parsedProducts = json.table.rows.map((row) => {
+          const name = row.c[0]?.v || "Produkt";
+          // НОВОЕ: Генерируем уникальный ID для ссылки из названия товара
+          const id = encodeURIComponent(name.trim().toLowerCase().replace(/\s+/g, '-'));
+          
+          return {
+            id: id,
+            name: name,
+            description: row.c[1]?.v || "",
+            price: row.c[2]?.v ? `${row.c[2].v} Kč` : "Na vyžádání",
+            image: row.c[3]?.v || "https://via.placeholder.com/400x300?text=Foto",
+          };
+        });
+        
         setProducts(parsedProducts);
+
+        // НОВОЕ: Проверяем, есть ли в ссылке ID товара при загрузке страницы
+        const urlParams = new URLSearchParams(window.location.search);
+        const productIdFromUrl = urlParams.get("product");
+        if (productIdFromUrl) {
+          const foundProduct = parsedProducts.find(p => p.id === productIdFromUrl);
+          if (foundProduct) {
+            setSelectedProduct(foundProduct); // Автоматически открываем модалку!
+          }
+        }
+
       } catch (error) {
         console.error("Chyba:", error);
       } finally {
@@ -30,6 +52,17 @@ export default function App() {
     }
     loadProducts();
   }, []);
+
+  // НОВОЕ: Обновляем ссылку в адресной строке при открытии/закрытии модалки
+  useEffect(() => {
+    const url = new URL(window.location);
+    if (selectedProduct) {
+      url.searchParams.set("product", selectedProduct.id);
+    } else {
+      url.searchParams.delete("product");
+    }
+    window.history.pushState({}, '', url);
+  }, [selectedProduct]);
 
   // --- ОТПРАВКА ФОРМЫ ---
   async function handleSubmit(event) {
@@ -135,7 +168,7 @@ export default function App() {
         </div>
       </section>
 
-      {/* --- PRODUKTY (С ЦЕНОЙ) --- */}
+      {/* --- PRODUKTY --- */}
       <section id="products" className="container mx-auto px-4 py-20 flex-grow bg-[#F5F5F2]">
         <div className="text-center mb-12">
           <span className="text-xs font-bold uppercase tracking-[0.2em] text-gray-500">Co například instalujeme</span>
@@ -169,7 +202,6 @@ export default function App() {
                     {product.name}
                   </h3>
 
-                  {/* ИЗМЕНЕНИЕ: Теперь показываем цену прямо здесь */}
                   <div className="mt-auto pt-4 flex justify-between items-end border-t border-gray-100">
                     <div className="flex flex-col">
                       <span className="text-xs text-gray-400 uppercase tracking-wider mb-1 font-semibold">Orientační cena</span>
@@ -250,6 +282,22 @@ export default function App() {
 
             <div className="w-full md:w-1/2 p-10 flex flex-col">
               <h3 className="text-xl md:text-2xl font-bold mb-4 text-[#121826] uppercase leading-tight">{selectedProduct.name}</h3>
+              
+              {/* НОВОЕ: Кнопка копирования ссылки */}
+              <button 
+                onClick={() => {
+                  const url = `${window.location.origin}${window.location.pathname}?product=${selectedProduct.id}`;
+                  navigator.clipboard.writeText(url);
+                  setCopySuccess(true);
+                  setTimeout(() => setCopySuccess(false), 2000); // Возвращаем текст через 2 секунды
+                }}
+                className="flex items-center gap-2 text-sm text-gray-500 hover:text-[#121826] mb-6 transition w-fit"
+              >
+                <span>{copySuccess ? "✅" : "🔗"}</span>
+                <span className={copySuccess ? "font-bold text-green-600" : "underline"}>
+                  {copySuccess ? "Odkaz zkopírován!" : "Zkopírovat odkaz na produkt"}
+                </span>
+              </button>
 
               <div className="prose prose-sm text-gray-600 mb-8 whitespace-pre-line flex-grow overflow-y-auto max-h-60 custom-scrollbar">
                 {selectedProduct.description}
