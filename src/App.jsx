@@ -211,6 +211,9 @@ export default function App() {
               </button>
             ))}
           </div>
+          
+          {/* Общая надпись про НДС (DPH) */}
+          <p className="text-sm text-gray-400 mt-6 font-medium">Všechny uvedené ceny jsou včetně DPH.</p>
         </div>
 
         {loading ? (
@@ -218,7 +221,7 @@ export default function App() {
             <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#121826]"></div>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mt-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mt-4">
             {filteredProducts.length > 0 ? (
               filteredProducts.map((product, index) => (
                 <div key={index}
@@ -241,7 +244,8 @@ export default function App() {
 
                     <div className="mt-auto pt-4 flex justify-between items-end border-t border-gray-100">
                       <div className="flex flex-col">
-                        <span className="text-xs text-gray-400 uppercase tracking-wider mb-1 font-semibold">Orientační cena</span>
+                        {/* Изменили Orientační cena на Cena */}
+                        <span className="text-xs text-gray-400 uppercase tracking-wider mb-1 font-semibold">Cena</span>
                         <span className="text-lg font-bold text-[#121826] leading-none">{product.price}</span>
                       </div>
                       <span className="w-10 h-10 rounded-full bg-[#F5F5F2] flex items-center justify-center text-[#121826] group-hover:bg-[#121826] group-hover:text-white transition shadow-sm">
@@ -330,9 +334,15 @@ export default function App() {
 
               <div className="mt-auto pt-6 border-t border-gray-100">
                 <p className="text-sm text-gray-500 mb-2">
-                  {selectedProduct.category === "Naše práce" ? "Orientační cena instalace:" : "Orientační cena hardwaru:"}
+                  {selectedProduct.category === "Naše práce" ? "Cena instalace:" : "Cena hardwaru:"}
                 </p>
-                <p className="text-2xl font-bold text-[#121826] mb-6">{selectedProduct.price}</p>
+                <div className="flex items-baseline gap-2 mb-6">
+                  <p className="text-2xl font-bold text-[#121826]">{selectedProduct.price}</p>
+                  {/* Показываем приписку vč. DPH только если есть реальная цена */}
+                  {selectedProduct.price !== "Na vyžádání" && (
+                    <span className="text-sm font-medium text-gray-500">vč. DPH</span>
+                  )}
+                </div>
                 <a href="#contact" onClick={() => setSelectedProduct(null)} className="block text-center w-full bg-[#121826] text-[#E7E6E1] py-4 font-bold uppercase tracking-widest hover:bg-[#2A3441] transition">
                   {selectedProduct.category === "Naše práce" ? "Chci podobné řešení" : "Poptat instalaci"}
                 </a>
