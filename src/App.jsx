@@ -15,20 +15,16 @@ export default function App() {
   // --- ЗАГРУЗКА ДАННЫХ С РАЗНЫХ ЛИСТОВ ---
   useEffect(() => {
     async function loadProducts() {
-      // ID твоей таблицы
       const sheetId = "1Y423RJnyWCGu2UFceA5TWej1FufDx8lA";
       
       try {
-        // Запускаем скачивание всех листов одновременно
         const fetchPromises = TABS.map(async (tabName) => {
-          // Специальная ссылка, которая указывает Гуглу, какой именно лист (sheet) нам нужен
           const sheetUrl = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(tabName)}`;
           
           try {
             const response = await fetch(sheetUrl);
             const text = await response.text();
             
-            // Если лист пустой или его нет, Гугл отдаст ошибку, мы ее перехватим
             if (!text.includes("google.visualization.Query.setResponse")) return [];
             
             const json = JSON.parse(text.substr(47).slice(0, -2));
@@ -44,25 +40,20 @@ export default function App() {
                 description: row.c[1]?.v || "",
                 price: row.c[2]?.v ? `${row.c[2].v} Kč` : "Na vyžádání",
                 image: row.c[3]?.v || "https://via.placeholder.com/400x300?text=Foto",
-                // Категория автоматически назначается по имени листа!
                 category: tabName,
               };
             });
           } catch (err) {
             console.warn(`Не удалось загрузить лист: ${tabName}`, err);
-            return []; // Если ошибка на одном листе, возвращаем пустоту, чтобы другие загрузились
+            return [];
           }
         });
 
-        // Ждем, пока скачаются все листы
         const results = await Promise.all(fetchPromises);
-        
-        // results - это массив массивов. Соединяем их в один общий список товаров
         const parsedProducts = results.flat();
         
         setProducts(parsedProducts);
 
-        // Проверяем, не пришел ли клиент по прямой ссылке
         const urlParams = new URLSearchParams(window.location.search);
         const productIdFromUrl = urlParams.get("product");
         if (productIdFromUrl) {
@@ -118,7 +109,6 @@ export default function App() {
     }
   }
 
-  // Фильтруем товары для текущей открытой вкладки
   const filteredProducts = products.filter(product => product.category === activeTab);
 
   return (
@@ -130,9 +120,17 @@ export default function App() {
           <div className="flex items-center gap-3 cursor-pointer h-full py-2" onClick={() => window.scrollTo(0,0)}>
             <img src="/images/logo.png" alt="I SEE YOU 24" className="h-full w-auto object-contain" />
           </div>
-          <a href="#contact" className="text-xs font-bold uppercase tracking-widest text-[#E7E6E1] border border-[#E7E6E1]/30 px-6 py-2 hover:bg-[#E7E6E1] hover:text-[#121826] transition duration-300 rounded-sm">
-            Poptávka
-          </a>
+          
+          {/* НОВОЕ МЕНЮ В ШАПКЕ */}
+          <div className="flex items-center gap-6">
+            <div className="hidden md:flex items-center gap-6 mr-4">
+              <a href="#services" className="text-xs font-bold uppercase tracking-widest text-[#9CA3AF] hover:text-white transition">Služby</a>
+              <a href="#products" onClick={() => setActiveTab("Naše práce")} className="text-xs font-bold uppercase tracking-widest text-[#9CA3AF] hover:text-white transition">Naše práce</a>
+            </div>
+            <a href="#contact" className="text-xs font-bold uppercase tracking-widest text-[#E7E6E1] border border-[#E7E6E1]/30 px-6 py-2 hover:bg-[#E7E6E1] hover:text-[#121826] transition duration-300 rounded-sm">
+              Poptávka
+            </a>
+          </div>
         </div>
       </header>
 
@@ -146,9 +144,14 @@ export default function App() {
             Profesionální montáž kamerových systémů, zabezpečení objektů a kompletní IT servis.
             Zajistíme klid pro váš domov i firmu.
           </p>
+          
+          {/* ОБНОВЛЕННЫЕ КНОПКИ (Добавлена "Naše práce") */}
           <div className="flex flex-col sm:flex-row justify-center gap-4">
             <a href="#services" className="bg-[#E7E6E1] text-[#121826] px-8 py-4 font-bold uppercase tracking-widest hover:bg-white transition shadow-lg">
               Naše Služby
+            </a>
+            <a href="#products" onClick={() => setActiveTab("Naše práce")} className="bg-[#1A2332] border border-[#2A3441] text-[#E7E6E1] px-8 py-4 font-bold uppercase tracking-widest hover:bg-[#2A3441] transition shadow-lg">
+              Naše práce
             </a>
             <a href="#contact" className="border border-[#E7E6E1]/30 text-[#E7E6E1] px-8 py-4 font-bold uppercase tracking-widest hover:bg-[#E7E6E1]/10 transition">
               Kontaktovat
@@ -212,7 +215,6 @@ export default function App() {
             ))}
           </div>
           
-          {/* Общая надпись про НДС (DPH) */}
           <p className="text-sm text-gray-400 mt-6 font-medium">Všechny uvedené ceny jsou včetně DPH.</p>
         </div>
 
@@ -244,7 +246,6 @@ export default function App() {
 
                     <div className="mt-auto pt-4 flex justify-between items-end border-t border-gray-100">
                       <div className="flex flex-col">
-                        {/* Изменили Orientační cena на Cena */}
                         <span className="text-xs text-gray-400 uppercase tracking-wider mb-1 font-semibold">Cena</span>
                         <span className="text-lg font-bold text-[#121826] leading-none">{product.price}</span>
                       </div>
@@ -332,10 +333,10 @@ export default function App() {
                 {selectedProduct.description}
               </div>
 
+              {/* УБРАЛИ ТЕКСТ "Cena hardwaru", оставили только саму цифру */}
               <div className="mt-auto pt-6 border-t border-gray-100">
                 <div className="flex items-baseline gap-2 mb-6">
                   <p className="text-2xl font-bold text-[#121826]">{selectedProduct.price}</p>
-                  {/* Показываем приписку vč. DPH только если есть реальная цена */}
                   {selectedProduct.price !== "Na vyžádání" && (
                     <span className="text-sm font-medium text-gray-500">vč. DPH</span>
                   )}
