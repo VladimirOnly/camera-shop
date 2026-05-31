@@ -333,9 +333,6 @@ export default function App() {
               </div>
 
               <div className="mt-auto pt-6 border-t border-gray-100">
-                <p className="text-sm text-gray-500 mb-2">
-                  {selectedProduct.category === "Naše práce" ? "Cena instalace:" : "Cena hardwaru:"}
-                </p>
                 <div className="flex items-baseline gap-2 mb-6">
                   <p className="text-2xl font-bold text-[#121826]">{selectedProduct.price}</p>
                   {/* Показываем приписку vč. DPH только если есть реальная цена */}
