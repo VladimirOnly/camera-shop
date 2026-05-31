@@ -1,22 +1,16 @@
 import React, { useEffect, useState } from "react";
 
-// Вкладки для КАТАЛОГА ТОВАРОВ
-const PRODUCT_TABS = ["Kamerové systémy", "Zabezpečení", "Příslušenství"];
-// Вкладка для ПОРТФОЛИО
-const PORTFOLIO_TAB = "Naše práce";
-
-// Список всех листов для скачивания
-const ALL_SHEETS = [...PRODUCT_TABS, PORTFOLIO_TAB];
+// ВАЖНО: Названия этих вкладок должны ТОЧНО совпадать с названиями листов в Google Excel!
+const TABS = ["Kamerové systémy", "Zabezpečení", "Příslušenství", "Naše práce"];
 
 export default function App() {
   const [products, setProducts] = useState([]);
-  const [portfolio, setPortfolio] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [formStatus, setFormStatus] = useState("");
   const [copySuccess, setCopySuccess] = useState(false);
   
-  const [activeTab, setActiveTab] = useState(PRODUCT_TABS[0]);
+  const [activeTab, setActiveTab] = useState(TABS[0]);
 
   // --- ЗАГРУЗКА ДАННЫХ С РАЗНЫХ ЛИСТОВ ---
   useEffect(() => {
@@ -24,7 +18,7 @@ export default function App() {
       const sheetId = "1Y423RJnyWCGu2UFceA5TWej1FufDx8lA";
       
       try {
-        const fetchPromises = ALL_SHEETS.map(async (tabName) => {
+        const fetchPromises = TABS.map(async (tabName) => {
           const sheetUrl = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(tabName)}`;
           
           try {
@@ -36,15 +30,9 @@ export default function App() {
             const json = JSON.parse(text.substr(47).slice(0, -2));
             if (!json.table || !json.table.rows) return [];
 
-            // ИСКЛЮЧАЕМ СТРОКУ С ЗАГОЛОВКАМИ (где в первой колонке написано Name)
-            const validRows = json.table.rows.filter(row => {
-              const firstCol = row.c[0]?.v;
-              return firstCol && firstCol.toString().toLowerCase() !== "name";
-            });
-
-            return validRows.map((row) => {
-              const name = row.c[0]?.v || "";
-              const id = name.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') || Math.random().toString(36).substr(2, 9);
+            return json.table.rows.map((row) => {
+              const name = row.c[0]?.v || "Produkt";
+              const id = name.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
               
               return {
                 id: id,
@@ -62,19 +50,17 @@ export default function App() {
         });
 
         const results = await Promise.all(fetchPromises);
-        const allItems = results.flat();
+        const parsedProducts = results.flat();
         
-        // Разделяем товары и портфолио по разным массивам
-        setProducts(allItems.filter(item => PRODUCT_TABS.includes(item.category)));
-        setPortfolio(allItems.filter(item => item.category === PORTFOLIO_TAB));
+        setProducts(parsedProducts);
 
         const urlParams = new URLSearchParams(window.location.search);
         const productIdFromUrl = urlParams.get("product");
         if (productIdFromUrl) {
-          const foundProduct = allItems.find(p => p.id === productIdFromUrl);
+          const foundProduct = parsedProducts.find(p => p.id === productIdFromUrl);
           if (foundProduct) {
             setSelectedProduct(foundProduct);
-            if (PRODUCT_TABS.includes(foundProduct.category)) {
+            if (TABS.includes(foundProduct.category)) {
               setActiveTab(foundProduct.category);
             }
           }
@@ -135,10 +121,11 @@ export default function App() {
             <img src="/images/logo.png" alt="I SEE YOU 24" className="h-full w-auto object-contain" />
           </div>
           
+          {/* НОВОЕ МЕНЮ В ШАПКЕ */}
           <div className="flex items-center gap-6">
             <div className="hidden md:flex items-center gap-6 mr-4">
               <a href="#services" className="text-xs font-bold uppercase tracking-widest text-[#9CA3AF] hover:text-white transition">Služby</a>
-              <a href="#portfolio" className="text-xs font-bold uppercase tracking-widest text-[#9CA3AF] hover:text-white transition">Naše práce</a>
+              <a href="#products" onClick={() => setActiveTab("Naše práce")} className="text-xs font-bold uppercase tracking-widest text-[#9CA3AF] hover:text-white transition">Naše práce</a>
             </div>
             <a href="#contact" className="text-xs font-bold uppercase tracking-widest text-[#E7E6E1] border border-[#E7E6E1]/30 px-6 py-2 hover:bg-[#E7E6E1] hover:text-[#121826] transition duration-300 rounded-sm">
               Poptávka
@@ -158,11 +145,12 @@ export default function App() {
             Zajistíme klid pro váš domov i firmu.
           </p>
           
+          {/* ОБНОВЛЕННЫЕ КНОПКИ (Добавлена "Naše práce") */}
           <div className="flex flex-col sm:flex-row justify-center gap-4">
             <a href="#services" className="bg-[#E7E6E1] text-[#121826] px-8 py-4 font-bold uppercase tracking-widest hover:bg-white transition shadow-lg">
               Naše Služby
             </a>
-            <a href="#portfolio" className="bg-[#1A2332] border border-[#2A3441] text-[#E7E6E1] px-8 py-4 font-bold uppercase tracking-widest hover:bg-[#2A3441] transition shadow-lg">
+            <a href="#products" onClick={() => setActiveTab("Naše práce")} className="bg-[#1A2332] border border-[#2A3441] text-[#E7E6E1] px-8 py-4 font-bold uppercase tracking-widest hover:bg-[#2A3441] transition shadow-lg">
               Naše práce
             </a>
             <a href="#contact" className="border border-[#E7E6E1]/30 text-[#E7E6E1] px-8 py-4 font-bold uppercase tracking-widest hover:bg-[#E7E6E1]/10 transition">
@@ -205,14 +193,14 @@ export default function App() {
         </div>
       </section>
 
-      {/* --- PRODUKTY (КАТАЛОГ) --- */}
-      <section id="products" className="container mx-auto px-4 py-20 bg-[#F5F5F2]">
+      {/* --- PRODUKTY --- */}
+      <section id="products" className="container mx-auto px-4 py-20 flex-grow bg-[#F5F5F2]">
         <div className="text-center mb-10">
-          <span className="text-xs font-bold uppercase tracking-[0.2em] text-gray-500">Katalog</span>
+          <span className="text-xs font-bold uppercase tracking-[0.2em] text-gray-500">Katalog & Portfolio</span>
           <h2 className="text-3xl font-bold uppercase tracking-wide text-[#121826] mt-2 mb-8">Naše řešení</h2>
           
           <div className="flex flex-wrap justify-center gap-2 md:gap-8 border-b border-gray-300">
-            {PRODUCT_TABS.map((tab) => (
+            {TABS.map((tab) => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
@@ -277,52 +265,6 @@ export default function App() {
         )}
       </section>
 
-      {/* --- PORTFOLIO (НАШИ РАБОТЫ) --- */}
-      <section id="portfolio" className="py-20 bg-white">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <span className="text-xs font-bold uppercase tracking-[0.2em] text-gray-500">Portfolio</span>
-            <h2 className="text-3xl font-bold uppercase tracking-wide text-[#121826] mt-2">Naše práce</h2>
-            <div className="w-20 h-1 bg-[#121826] mx-auto mt-4"></div>
-          </div>
-
-          {loading ? (
-             <div className="flex justify-center items-center py-20">
-               <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#121826]"></div>
-             </div>
-          ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-              {portfolio.length > 0 ? (
-                portfolio.map((item, index) => (
-                  <div key={index} 
-                       className="group relative overflow-hidden bg-[#F5F5F2] shadow-sm hover:shadow-xl transition-all duration-300 cursor-pointer flex flex-col"
-                       onClick={() => setSelectedProduct(item)}>
-                    
-                    {/* Картинка заполняет блок (object-cover) для красоты галереи */}
-                    <div className="h-72 w-full overflow-hidden relative">
-                      <div className="absolute inset-0 bg-[#121826] opacity-0 group-hover:opacity-10 transition duration-500 z-10"></div>
-                      <img src={item.image} alt={item.name || "Ukázka práce"} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                    </div>
-                    
-                    {/* Блок с текстом показывается только если есть Имя или Описание */}
-                    {(item.name || item.description) && (
-                      <div className="p-6 bg-white border-t border-gray-100 flex flex-col flex-grow">
-                        {item.name && <h3 className="font-bold text-lg mb-2 text-[#121826] uppercase">{item.name}</h3>}
-                        {item.description && <p className="text-sm text-gray-600 line-clamp-3 flex-grow">{item.description}</p>}
-                      </div>
-                    )}
-                  </div>
-                ))
-              ) : (
-                <div className="col-span-full text-center text-gray-500 py-10">
-                  Zatím zde nejsou žádné ukázky.
-                </div>
-              )}
-            </div>
-          )}
-        </div>
-      </section>
-
       {/* --- KONTAKT --- */}
       <section id="contact" className="bg-[#121826] text-[#E7E6E1] py-24 relative">
         <div className="container mx-auto px-4 max-w-2xl relative z-10">
@@ -353,7 +295,7 @@ export default function App() {
 
       {/* --- FOOTER --- */}
       <footer className="bg-[#0D111A] text-[#4B5563] py-8 text-center text-[10px] uppercase tracking-[0.2em] border-t border-[#1A2332]">
-        <p>&copy; 2026 I SEE YOU 24. Profesionální instalace a IT servis.</p>
+        <p>&copy; 2025 I SEE YOU 24. Profesionální instalace a IT servis.</p>
       </footer>
 
       {/* --- MODAL --- */}
@@ -370,10 +312,7 @@ export default function App() {
             </div>
 
             <div className="w-full md:w-1/2 p-10 flex flex-col">
-              {/* Показываем имя в окне только если оно задано */}
-              {selectedProduct.name && (
-                <h3 className="text-xl md:text-2xl font-bold mb-4 text-[#121826] uppercase leading-tight">{selectedProduct.name}</h3>
-              )}
+              <h3 className="text-xl md:text-2xl font-bold mb-4 text-[#121826] uppercase leading-tight">{selectedProduct.name}</h3>
               
               <button 
                 onClick={() => {
@@ -394,27 +333,18 @@ export default function App() {
                 {selectedProduct.description}
               </div>
 
-              {/* РАЗДЕЛЬНАЯ ЛОГИКА ДЛЯ ТОВАРОВ И ПОРТФОЛИО В ОКНЕ */}
-              {selectedProduct.category === "Naše práce" ? (
-                <div className="mt-auto pt-6 border-t border-gray-100">
-                  <a href="#contact" onClick={() => setSelectedProduct(null)} className="block text-center w-full bg-[#121826] text-[#E7E6E1] py-4 font-bold uppercase tracking-widest hover:bg-[#2A3441] transition">
-                    Mám zájem o podobné řešení
-                  </a>
+              {/* УБРАЛИ ТЕКСТ "Cena hardwaru", оставили только саму цифру */}
+              <div className="mt-auto pt-6 border-t border-gray-100">
+                <div className="flex items-baseline gap-2 mb-6">
+                  <p className="text-2xl font-bold text-[#121826]">{selectedProduct.price}</p>
+                  {selectedProduct.price !== "Na vyžádání" && (
+                    <span className="text-sm font-medium text-gray-500">vč. DPH</span>
+                  )}
                 </div>
-              ) : (
-                <div className="mt-auto pt-6 border-t border-gray-100">
-                  <div className="flex items-baseline gap-2 mb-6">
-                    <p className="text-2xl font-bold text-[#121826]">{selectedProduct.price}</p>
-                    {selectedProduct.price !== "Na vyžádání" && (
-                      <span className="text-sm font-medium text-gray-500">vč. DPH</span>
-                    )}
-                  </div>
-                  <a href="#contact" onClick={() => setSelectedProduct(null)} className="block text-center w-full bg-[#121826] text-[#E7E6E1] py-4 font-bold uppercase tracking-widest hover:bg-[#2A3441] transition">
-                    Poptat instalaci
-                  </a>
-                </div>
-              )}
-
+                <a href="#contact" onClick={() => setSelectedProduct(null)} className="block text-center w-full bg-[#121826] text-[#E7E6E1] py-4 font-bold uppercase tracking-widest hover:bg-[#2A3441] transition">
+                  {selectedProduct.category === "Naše práce" ? "Chci podobné řešení" : "Poptat instalaci"}
+                </a>
+              </div>
             </div>
           </div>
         </div>
