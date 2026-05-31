@@ -194,7 +194,7 @@ export default function App() {
       <section id="products" className="container mx-auto px-4 py-20 flex-grow bg-[#F5F5F2]">
         <div className="text-center mb-10">
           <span className="text-xs font-bold uppercase tracking-[0.2em] text-gray-500">Katalog & Portfolio</span>
-          <h2 className="text-3xl font-bold uppercase tracking-wide text-[#121826] mt-2 mb-8">Ukázka techniky</h2>
+          <h2 className="text-3xl font-bold uppercase tracking-wide text-[#121826] mt-2 mb-8">Naše řešení</h2>
           
           <div className="flex flex-wrap justify-center gap-2 md:gap-8 border-b border-gray-300">
             {TABS.map((tab) => (
