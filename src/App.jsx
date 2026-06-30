@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 
 // Вкладки для КАТАЛОГА ТОВАРОВ
 const PRODUCT_TABS = ["Kamerové systémy", "Zabezpečení", "Příslušenství"];
-// Вкладка для ПОРТФОЛИО (Должна 1 в 1 совпадать с именем листа в Excel!)
+// Вкладка для ПОРТФОЛИО
 const PORTFOLIO_TAB = "Naše práce";
 
 // Список всех листов для скачивания
@@ -37,14 +37,12 @@ export default function App() {
             const json = JSON.parse(text.substr(47).slice(0, -2));
             if (!json.table || !json.table.rows) return [];
 
-            // ФИЛЬТР: Убираем пустые строки и строку с заголовками (Name)
             const validRows = json.table.rows.filter(row => {
               const firstCol = row.c[0]?.v;
               if (typeof firstCol === 'string' && firstCol.toLowerCase() === "name") {
-                return false; // Это заголовок таблицы, игнорируем
+                return false; 
               }
-              // Строка валидна, если в ней есть Картинка ИЛИ Имя
-              return row.c[3]?.v || row.c[0]?.v;
+              return row.c[0]?.v || row.c[3]?.v;
             });
 
             return validRows.map((row) => {
@@ -325,15 +323,14 @@ export default function App() {
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
                 {portfolio.length > 0 ? (
                   portfolio.map((item, index) => (
-                    // ДИЗАЙН ПОРТФОЛИО: Просто квадратная картинка на всю карточку
                     <div key={index} 
                          className="group relative overflow-hidden bg-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 cursor-pointer aspect-square rounded-sm"
                          onClick={() => setSelectedProduct(item)}>
                       
                       <img src={item.image} alt={item.name || "Ukázka práce"} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
                       
-                      {/* Затемнение и надпись при наведении */}
-                      <div className="absolute inset-0 bg-[#121826] bg-opacity-0 group-hover:bg-opacity-40 transition-all duration-500 flex items-center justify-center">
+                      {/* ИСПРАВЛЕННЫЙ ФОН для версии Tailwind 4.0: bg-[#121826]/0 меняется на bg-[#121826]/40 */}
+                      <div className="absolute inset-0 bg-[#121826]/0 group-hover:bg-[#121826]/40 transition-all duration-500 flex items-center justify-center">
                          <span className="text-white opacity-0 group-hover:opacity-100 font-bold tracking-widest uppercase transition-opacity duration-500 border border-white px-6 py-2">
                             Zobrazit
                          </span>
@@ -398,7 +395,6 @@ export default function App() {
             </div>
 
             <div className="w-full md:w-1/2 p-8 flex flex-col">
-              {/* Показываем имя в окне только если оно задано */}
               {selectedProduct.name && (
                 <h3 className="text-xl md:text-2xl font-bold mb-4 text-[#121826] uppercase leading-tight">{selectedProduct.name}</h3>
               )}
@@ -422,7 +418,6 @@ export default function App() {
                 {selectedProduct.description}
               </div>
 
-              {/* РАЗДЕЛЬНАЯ ЛОГИКА ДЛЯ ТОВАРОВ И ПОРТФОЛИО В ОКНЕ */}
               {selectedProduct.category === "Naše práce" ? (
                 <div className="mt-auto pt-6 border-t border-gray-100">
                   <a href="#contact" onClick={() => setSelectedProduct(null)} className="block text-center w-full bg-[#121826] text-[#E7E6E1] py-4 font-bold uppercase tracking-widest hover:bg-[#2A3441] transition">
